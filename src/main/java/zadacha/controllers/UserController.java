@@ -1,9 +1,7 @@
 package zadacha.controllers;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import zadacha.entities.User;
 import zadacha.services.UserService;
 
@@ -16,5 +14,10 @@ public class UserController {
     @PostMapping("/registration")
     boolean registerNewUser(@RequestBody User newUser) {
         return userService.saveUser(newUser);
+    }
+
+    @PutMapping("/login")
+    boolean accessAccount(@RequestBody User user) {
+        return userService.loginUser(user);
     }
 }

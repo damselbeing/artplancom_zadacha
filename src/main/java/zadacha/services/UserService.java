@@ -48,6 +48,18 @@ public class UserService implements UserDetailsService {
         return true;
     }
 
+    @Transactional
+    public boolean loginUser(User user) {
+        User userFromDB = userRepository.getUserByName(user.getName());
+
+        if (bCryptPasswordEncoder.matches(user.getPassword(), userFromDB.getPassword())) {
+            return true;
+        }
+
+        return false;
+    }
+
+
 
 
 }
