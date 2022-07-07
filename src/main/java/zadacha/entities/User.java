@@ -11,7 +11,7 @@ public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
     @Column(nullable = false, name = "user_id")
-    private Long idClient;
+    private Long idUser;
 
     @Column(nullable = false, name = "name")
     private String name;
@@ -22,8 +22,10 @@ public class User {
     public User() {
     }
 
-    public User(Long idClient, String name, String password) {
-        this.idClient = idClient;
+    public User(Long idUser,
+                String name,
+                String password) {
+        this.idUser = idUser;
         this.name = name;
         this.password = password;
     }
