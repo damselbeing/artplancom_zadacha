@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import zadacha.entities.Animal;
 import zadacha.entities.User;
+import zadacha.exceptions.AnimalNotFoundException;
 import zadacha.repositories.AnimalRepository;
 import zadacha.repositories.UserRepository;
 
@@ -22,10 +23,14 @@ public class AnimalService {
     AnimalRepository animalRepository;
 
     public List<Animal> getAnimals() {
-        return animalRepository.findAll().stream().collect(Collectors.toList());
+        return animalRepository.findAll().stream()
+                .collect(Collectors.toList());
     }
 
-
+    public Animal getAnimalById(Long id) throws AnimalNotFoundException {
+        return animalRepository.findAnimalByIdAnimal(id)
+                .orElseThrow(AnimalNotFoundException::new);
+    }
 
 
 }
