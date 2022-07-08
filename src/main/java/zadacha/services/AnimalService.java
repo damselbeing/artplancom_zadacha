@@ -1,17 +1,11 @@
 package zadacha.services;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import zadacha.entities.Animal;
-import zadacha.entities.User;
 import zadacha.exceptions.AnimalNotFoundException;
 import zadacha.repositories.AnimalRepository;
-import zadacha.repositories.UserRepository;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -30,6 +24,18 @@ public class AnimalService {
     public Animal getAnimalById(Long id) throws AnimalNotFoundException {
         return animalRepository.findAnimalByIdAnimal(id)
                 .orElseThrow(AnimalNotFoundException::new);
+    }
+
+    @Transactional
+    public boolean saveAnimal(Animal animal) {
+        Animal animalFromDB = animalRepository.getAnimalByPetName(animal.getPetName());
+
+        if (animalFromDB != null) {
+            return false;
+        }
+
+        animalRepository.save(animal);
+        return true;
     }
 
 

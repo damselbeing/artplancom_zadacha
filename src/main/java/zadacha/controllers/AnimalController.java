@@ -13,16 +13,21 @@ public class AnimalController {
     @Autowired
     AnimalService animalService;
 
-    @GetMapping("/animals")
+    @GetMapping("/all")
     public List<Animal> viewAnimals() {
         return animalService.getAnimals();
     }
 
-    @GetMapping("/animals/{id}")
+    @GetMapping("/one/{id}")
     public Animal viewAnimalProfile(
             @PathVariable(value = "id") Long id)
             throws AnimalNotFoundException {
         return animalService.getAnimalById(id);
+    }
+
+    @PostMapping("/new")
+    boolean addNewAnimal(@RequestBody Animal newAnimal) {
+        return animalService.saveAnimal(newAnimal);
     }
 
 }
