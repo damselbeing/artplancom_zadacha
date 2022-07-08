@@ -1,11 +1,10 @@
 package zadacha.exceptions;
 
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 
-public class UserNotFoundException extends UsernameNotFoundException {
+public class UserNotFoundException extends Exception {
 
     public UserNotFoundException() {
-
-        super("Error: the username is not found!");
+        super("Error: the user is not found!");
     }
+
 }
