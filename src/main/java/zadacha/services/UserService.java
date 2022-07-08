@@ -3,11 +3,12 @@ package zadacha.services;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import zadacha.entities.User;
+import zadacha.exceptions.UserAlreadyExistsException;
+import zadacha.exceptions.UserNotFoundException;
 import zadacha.repositories.UserRepository;
 
 @Service
@@ -20,12 +21,12 @@ public class UserService implements UserDetailsService {
     BCryptPasswordEncoder bCryptPasswordEncoder;
 
     @Override
-    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        User userFromDB = userRepository.getUserByName(username);
+    @Transactional
+    public UserDetails loadUserByUsername(String username) throws UserNotFoundException {
 
-        if (userFromDB == null) {
-            throw new UsernameNotFoundException("User not found");
-        }
+        User userFromDB = userRepository
+                .findUserByName(username)
+                .orElseThrow(UserNotFoundException::new);
 
         UserDetails user = org.springframework.security.core.userdetails.User.builder()
                 .username(userFromDB.getName())
@@ -36,21 +37,23 @@ public class UserService implements UserDetailsService {
     }
 
     @Transactional
-    public boolean saveUser(User user) {
-        User userFromDB = userRepository.getUserByName(user.getName());
+    public boolean createUser(User newUser) throws UserAlreadyExistsException {
 
-        if (userFromDB != null) {
-            return false;
+        if(userRepository.existsUserByName(newUser.getName())) {
+            throw new UserAlreadyExistsException();
         }
 
-        user.setPassword(bCryptPasswordEncoder.encode(user.getPassword()));
-        userRepository.save(user);
+        newUser.setPassword(bCryptPasswordEncoder.encode(newUser.getPassword()));
+        userRepository.save(newUser);
         return true;
     }
 
     @Transactional
-    public boolean loginUser(User user) {
-        User userFromDB = userRepository.getUserByName(user.getName());
+    public boolean loginUser(User user) throws UserNotFoundException {
+
+        User userFromDB = userRepository
+                .findUserByName(user.getName())
+                .orElseThrow(UserNotFoundException::new);
 
         if (bCryptPasswordEncoder.matches(user.getPassword(), userFromDB.getPassword())) {
             return true;
