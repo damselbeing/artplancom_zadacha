@@ -18,8 +18,7 @@ public class AnimalService {
     AnimalRepository animalRepository;
 
     public List<Animal> getAnimals() {
-        return animalRepository.findAll().stream()
-                .collect(Collectors.toList());
+        return animalRepository.findAll().stream().collect(Collectors.toList());
     }
 
     public Animal getAnimalById(Long id) throws AnimalNotFoundException {
@@ -40,13 +39,30 @@ public class AnimalService {
     }
 
     @Transactional
-    public boolean saveAnimal(Animal animal) throws AnimalAlreadyExistsException {
+    public boolean createAnimal(Animal newAnimal) throws AnimalAlreadyExistsException {
 
-        if(animalRepository.existsAnimalByPetName(animal.getPetName())) {
+        if(animalRepository.existsAnimalByPetName(newAnimal.getPetName())) {
             throw new AnimalAlreadyExistsException();
         }
 
-        animalRepository.save(animal);
+        animalRepository.save(newAnimal);
+        return true;
+    }
+
+    @Transactional
+    public boolean updateAnimal(Animal editedAnimal) throws AnimalNotFoundException {
+
+        Animal animalFromDB = animalRepository
+                .findAnimalByIdAnimal(editedAnimal.getIdAnimal())
+                .orElseThrow(AnimalNotFoundException::new);
+
+        animalFromDB.setIdAnimal(editedAnimal.getIdAnimal());
+        animalFromDB.setSpecies(editedAnimal.getSpecies());
+        animalFromDB.setBirthDate(editedAnimal.getBirthDate());
+        animalFromDB.setSex(editedAnimal.getSex());
+        animalFromDB.setPetName(editedAnimal.getPetName());
+
+        animalRepository.save(editedAnimal);
         return true;
     }
 }

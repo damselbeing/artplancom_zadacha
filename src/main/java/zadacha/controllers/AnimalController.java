@@ -20,25 +20,33 @@ public class AnimalController {
         return animalService.getAnimals();
     }
 
-    @GetMapping("/animal/{id}")
+    @GetMapping("/animals/{id}")
     public Animal viewAnimalProfile(@PathVariable(value = "id") Long id)
             throws AnimalNotFoundException {
 
         return animalService.getAnimalById(id);
     }
 
-    @DeleteMapping("/animal/{id}")
+    @DeleteMapping("/animals/{id}")
     public Integer deleteAnimal(@PathVariable(value = "id") Long id)
             throws AnimalNotFoundException {
 
         return animalService.removeAnimal(id);
     }
 
-    @PostMapping("/animal")
+    @PutMapping("/animals/{id}")
+    public boolean editAnimal(@RequestBody Animal editedAnimal,
+                              @PathVariable(value = "id") Long id)
+            throws AnimalNotFoundException {
+
+        return animalService.updateAnimal(editedAnimal);
+    }
+
+    @PostMapping("/animals/add")
     public boolean addNewAnimal(@RequestBody Animal newAnimal)
             throws AnimalAlreadyExistsException {
 
-        return animalService.saveAnimal(newAnimal);
+        return animalService.createAnimal(newAnimal);
     }
 
 
