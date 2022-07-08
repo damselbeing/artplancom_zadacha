@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import zadacha.entities.Animal;
+import zadacha.exceptions.AnimalAlreadyExistsException;
 import zadacha.exceptions.AnimalNotFoundException;
 import zadacha.repositories.AnimalRepository;
 
@@ -22,21 +23,30 @@ public class AnimalService {
     }
 
     public Animal getAnimalById(Long id) throws AnimalNotFoundException {
-        return animalRepository.findAnimalByIdAnimal(id)
+
+        return animalRepository
+                .findAnimalByIdAnimal(id)
                 .orElseThrow(AnimalNotFoundException::new);
     }
 
     @Transactional
-    public boolean saveAnimal(Animal animal) {
-        Animal animalFromDB = animalRepository.getAnimalByPetName(animal.getPetName());
+    public Integer removeAnimal(Long id) throws AnimalNotFoundException {
 
-        if (animalFromDB != null) {
-            return false;
+        animalRepository
+                .findAnimalByIdAnimal(id)
+                .orElseThrow(AnimalNotFoundException::new);
+
+        return animalRepository.deleteAnimalByIdAnimal(id);
+    }
+
+    @Transactional
+    public boolean saveAnimal(Animal animal) throws AnimalAlreadyExistsException {
+
+        if(animalRepository.existsAnimalByPetName(animal.getPetName())) {
+            throw new AnimalAlreadyExistsException();
         }
 
         animalRepository.save(animal);
         return true;
     }
-
-
 }
