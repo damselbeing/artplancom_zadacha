@@ -1,4 +1,4 @@
-package zadacha.services;
+package zadacha.services.impl;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -7,20 +7,23 @@ import zadacha.entities.Animal;
 import zadacha.exceptions.AnimalAlreadyExistsException;
 import zadacha.exceptions.AnimalNotFoundException;
 import zadacha.repositories.AnimalRepository;
+import zadacha.services.api.AnimalService;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
-public class AnimalService {
+public class AnimalServiceImpl implements AnimalService {
 
     @Autowired
-    AnimalRepository animalRepository;
+    private AnimalRepository animalRepository;
 
+    @Transactional
     public List<Animal> getAnimals() {
         return animalRepository.findAll().stream().collect(Collectors.toList());
     }
 
+    @Transactional
     public Animal getAnimalById(Long id) throws AnimalNotFoundException {
 
         return animalRepository

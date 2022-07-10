@@ -1,4 +1,4 @@
-package zadacha.services;
+package zadacha.services.impl;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -9,15 +9,16 @@ import zadacha.exceptions.UserAlreadyExistsException;
 import zadacha.exceptions.UserNotFoundException;
 import zadacha.exceptions.WrongPasswordException;
 import zadacha.repositories.UserRepository;
+import zadacha.services.api.UserService;
 
 @Service
-public class UserService {
+public class UserServiceImpl implements UserService {
 
     @Autowired
-    UserRepository userRepository;
+    private UserRepository userRepository;
 
     @Autowired
-    BCryptPasswordEncoder bCryptPasswordEncoder;
+    private BCryptPasswordEncoder bCryptPasswordEncoder;
 
     @Transactional
     public boolean createUser(User newUser) throws UserAlreadyExistsException {

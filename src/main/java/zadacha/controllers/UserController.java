@@ -6,13 +6,13 @@ import zadacha.entities.User;
 import zadacha.exceptions.UserAlreadyExistsException;
 import zadacha.exceptions.UserNotFoundException;
 import zadacha.exceptions.WrongPasswordException;
-import zadacha.services.UserService;
+import zadacha.services.api.UserService;
 
 @RestController
 public class UserController {
 
     @Autowired
-    UserService userService;
+    private UserService userService;
 
     @PostMapping("/registration")
     public boolean registerNewUser(@RequestBody User newUser)
