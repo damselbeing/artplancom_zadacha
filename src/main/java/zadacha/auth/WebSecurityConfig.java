@@ -1,4 +1,4 @@
-package zadacha.config;
+package zadacha.auth;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
@@ -14,10 +14,10 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Autowired
-    UserDetailsService userDetailsService;
+    private UserDetailsService userDetailsService;
 
     @Autowired
-    BCryptPasswordEncoder bCryptPasswordEncoder;
+    private BCryptPasswordEncoder bCryptPasswordEncoder;
 
 
     @Override
@@ -26,35 +26,16 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .csrf()
                     .disable()                                                                                                                                                                                                          //NOSONAR not used in secure contexts
                 .authorizeRequests()
-
-                    //Доступ только для не зарегистрированных пользователей
+                    .antMatchers("/animals/**").fullyAuthenticated()
+                    .antMatchers("/validation/**").not().fullyAuthenticated()
                     .antMatchers("/registration").not().fullyAuthenticated()
-
-                    //Доступ только для пользователей с ролью Администратор
-//                    .antMatchers("/admin/**").hasRole("ADMIN")
-//
-//                    //Доступ только для пользователей с ролью User
-//                    .antMatchers("/client/**").hasRole("USER")
-
-                    //Доступ разрешен всем пользователей
-                    .antMatchers("/**").permitAll()
-
-                    //Все остальные страницы требуют аутентификации
-                    .anyRequest().authenticated()
-
-                    .and()
-
-                //Настройка для входа в систему
+                    .antMatchers("/login").permitAll()
+//                    .anyRequest().permitAll()
+                .and()
                 .formLogin()
-                    .loginPage("/login")
-
-                    //Перенарпавление на главную страницу после успешного входа
-                    .defaultSuccessUrl("/")
-                    .permitAll()
-                    .and()
-                .logout()
-                    .permitAll()
-                    .logoutSuccessUrl("/login");
+                    .defaultSuccessUrl("/animals")
+                .and()
+                .logout();
 
     }
 
