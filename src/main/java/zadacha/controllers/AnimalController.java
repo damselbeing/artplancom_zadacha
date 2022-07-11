@@ -1,10 +1,12 @@
 package zadacha.controllers;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 import zadacha.entities.Animal;
 import zadacha.exceptions.AnimalAlreadyExistsException;
 import zadacha.exceptions.AnimalNotFoundException;
+import zadacha.exceptions.UserNotFoundException;
 import zadacha.services.impl.AnimalServiceImpl;
 import java.util.List;
 
@@ -15,9 +17,10 @@ public class AnimalController {
     AnimalServiceImpl animalServiceImpl;
 
     @GetMapping("/animals")
-    public List<Animal> viewAnimals() {
+    public List<Animal> viewAnimals(Authentication authentication)
+            throws UserNotFoundException {
 
-        return animalServiceImpl.getAnimals();
+        return animalServiceImpl.getAnimals(authentication);
     }
 
     @GetMapping("/animals/{id}")

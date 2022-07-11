@@ -1,8 +1,10 @@
 package zadacha.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
 
 import javax.persistence.*;
+import java.util.List;
 
 @Data
 @Entity
@@ -18,6 +20,11 @@ public class User {
 
     @Column(nullable = false, name = "password")
     private String password;
+
+    @OneToMany(mappedBy = "user")
+    @JsonIgnore
+//    @JsonIgnore annotation is used to avoid recursion
+    private List<Animal> animals;
 
     public User() {
     }

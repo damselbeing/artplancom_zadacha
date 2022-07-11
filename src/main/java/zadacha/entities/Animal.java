@@ -1,5 +1,6 @@
 package zadacha.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
 
 import javax.persistence.*;
@@ -24,6 +25,12 @@ public class Animal {
 
     @Column(nullable = false, name = "pet_name")
     private String petName;
+
+    @ManyToOne
+    @JoinColumn(name = "user_id")
+    @JsonIgnore
+    //    @JsonIgnore annotation is used to hide the field in JSON response
+    private User user;
 
     public Animal() {
     }
