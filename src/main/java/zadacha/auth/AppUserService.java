@@ -21,11 +21,14 @@ public class AppUserService implements UserDetailsService {
                     .orElseThrow(() -> new UsernameNotFoundException(
                             "Error: the username is not found!"));
 
-            UserDetails user = org.springframework.security.core.userdetails.User.builder()
-                    .username(userFromDB.getName())
-                    .password(userFromDB.getPassword())
-                    .authorities("USER")
-                    .build();
+            UserDetails user = new AppUser(userFromDB);
+//
+//
+//            UserDetails user = org.springframework.security.core.userdetails.User.builder()
+//                    .username(userFromDB.getName())
+//                    .password(userFromDB.getPassword())
+//                    .authorities("USER")
+//                    .build();
 
             return user;
 
