@@ -32,7 +32,7 @@ public class WebSecurityConfig {
     public SecurityFilterChain filterChain(HttpSecurity httpSecurity) throws Exception {
         httpSecurity
                 .csrf()
-                    .disable()                                                                                                                                                                                                          //NOSONAR not used in secure contexts
+                    .disable()
                 .authorizeRequests()
                     .antMatchers("/animals/**").fullyAuthenticated()
                     .antMatchers("/validation/**").not().fullyAuthenticated()
