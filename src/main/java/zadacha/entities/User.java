@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
 
 import javax.persistence.*;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Data
@@ -25,6 +26,15 @@ public class User {
     @JsonIgnore
 //    @JsonIgnore annotation is used to avoid recursion
     private List<Animal> animals;
+
+    @Column(name = "account_non_locked")
+    private boolean accountNonLocked;
+
+    @Column(name = "failed_attempt")
+    private int failedAttempt;
+
+    @Column(name = "lock_time")
+    private LocalDateTime lockTime;
 
     public User() {
     }

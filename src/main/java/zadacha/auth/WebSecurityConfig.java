@@ -27,6 +27,16 @@ public class WebSecurityConfig {
         return authenticationConfiguration.getAuthenticationManager();
     }
 
+    @Bean
+    public CustomSuccessHandler loginSuccessHandler() {
+        return new CustomSuccessHandler();
+    }
+
+    @Bean
+    public CustomFailureHandler loginFailureHandler() {
+        return new CustomFailureHandler();
+    }
+
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity httpSecurity) throws Exception {
@@ -34,15 +44,18 @@ public class WebSecurityConfig {
                 .csrf()
                     .disable()
                 .authorizeRequests()
-                    .antMatchers("/animals/**").fullyAuthenticated()
-                    .antMatchers("/validation/**").not().fullyAuthenticated()
-                    .antMatchers("/registration").not().fullyAuthenticated()
-                    .antMatchers("/login").permitAll()
+                    .antMatchers("/animals/**").authenticated()
+                    .antMatchers("/validation/**").not().authenticated()
+                    .antMatchers("/registration").not().authenticated()
+//                    .antMatchers("/login").permitAll()
                 .and()
                 .formLogin()
-                    .defaultSuccessUrl("/animals")
+                .permitAll()
+                    .successHandler(loginSuccessHandler())
+                    .failureHandler(loginFailureHandler())
                 .and()
-                .logout();
+                .logout()
+                .permitAll();
         return httpSecurity.build();
 
     }

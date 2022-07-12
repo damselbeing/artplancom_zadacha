@@ -15,12 +15,23 @@ public class GlobalExceptionHandler {
             UserAlreadyExistsException.class,
             UserNotFoundException.class,
             WrongPasswordException.class})
-    public ErrorMessage globalExceptionHandler(Exception ex) {
+    public ErrorMessage appExceptionHandler(Exception ex) {
         ErrorMessage message = new ErrorMessage(
                 HttpStatus.BAD_REQUEST.value(),
                 ex.getMessage());
 
         return message;
     }
+
+//    @ResponseStatus(value = HttpStatus.UNAUTHORIZED)
+//    @ExceptionHandler({UserLockedException.class,
+//            BadCredentialsException.class})
+//    public ErrorMessage authExceptionHandler(Exception ex) {
+//        ErrorMessage message = new ErrorMessage(
+//                HttpStatus.UNAUTHORIZED.value(),
+//                ex.getMessage());
+//
+//        return message;
+//    }
 
 }

@@ -11,6 +11,9 @@ import zadacha.exceptions.WrongPasswordException;
 import zadacha.repositories.UserRepository;
 import zadacha.services.api.UserService;
 
+import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
+
 @Service
 public class UserServiceImpl implements UserService {
 
@@ -58,6 +61,46 @@ public class UserServiceImpl implements UserService {
         return true;
     }
 
+    @Transactional
+    public User getUserByName(String name) {
+        return userRepository.findUserByName(name.toUpperCase()).orElse(null);
+    }
 
+    @Transactional
+    public void increaseFailedAttempts(User user) {
+        int newFailAttempts = user.getFailedAttempt() + 1;
+        userRepository.updateFailedAttempts(newFailAttempts, user.getName());
+    }
 
+    @Transactional
+    public void resetFailedAttempts(String name) {
+        userRepository.updateFailedAttempts(0, name);
+    }
+
+    @Transactional
+    public void lock(User user) {
+        user.setAccountNonLocked(false);
+        user.setLockTime(LocalDateTime.now());
+
+        userRepository.save(user);
+    }
+
+    @Transactional
+    public boolean unlockWhenTimeExpired(User user) {
+        LocalDateTime lockTime = user.getLockTime();
+        LocalDateTime currentTime = LocalDateTime.now();
+        long diff = ChronoUnit.SECONDS.between(lockTime, currentTime);
+
+        if (diff > LOCK_TIME_DURATION) {
+            user.setAccountNonLocked(true);
+            user.setLockTime(LocalDateTime.now().minusYears(LOCK_TIME_RESET));
+            user.setFailedAttempt(0);
+
+            userRepository.save(user);
+
+            return true;
+        }
+
+        return false;
+    }
 }

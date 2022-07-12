@@ -28,6 +28,11 @@ public class UserController {
         return userService.loginUser(user);
     }
 
+    @GetMapping("/login")
+    public void accessAccount() {
+
+    }
+
     @GetMapping("/validation")
     public boolean validateName(@RequestParam String name)
             throws UserAlreadyExistsException {

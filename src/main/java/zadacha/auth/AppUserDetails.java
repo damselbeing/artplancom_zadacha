@@ -9,11 +9,11 @@ import zadacha.entities.User;
 import java.util.Collection;
 import java.util.Collections;
 
-public class AppUser implements UserDetails {
+public class AppUserDetails implements UserDetails {
 
     private final User user;
 
-    public AppUser(User user) {
+    public AppUserDetails(User user) {
 
         this.user = user;
     }
@@ -45,7 +45,7 @@ public class AppUser implements UserDetails {
 
     @Override
     public boolean isAccountNonLocked() {
-        return true;
+        return user.isAccountNonLocked();
     }
 
     @Override

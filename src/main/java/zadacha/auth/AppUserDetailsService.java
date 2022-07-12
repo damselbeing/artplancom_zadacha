@@ -9,21 +9,23 @@ import zadacha.entities.User;
 import zadacha.repositories.UserRepository;
 
 @Service
-public class AppUserService implements UserDetailsService {
+public class AppUserDetailsService implements UserDetailsService {
 
     @Autowired
     UserRepository userRepository;
 
     @Override
-    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-            User userFromDB = userRepository
+    public UserDetails loadUserByUsername(String username)
+            throws UsernameNotFoundException {
+
+        User userFromDB = userRepository
                     .findUserByName(username.toUpperCase())
                     .orElseThrow(() -> new UsernameNotFoundException(
                             "Error: the username is not found!"));
 
-            UserDetails user = new AppUser(userFromDB);
+        UserDetails user = new AppUserDetails(userFromDB);
 
-            return user;
+        return user;
 
     }
 }
