@@ -5,12 +5,15 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import zadacha.entities.User;
+import zadacha.exceptions.RequestException;
 import zadacha.exceptions.UserAlreadyExistsException;
 import zadacha.exceptions.UserNotFoundException;
 import zadacha.exceptions.WrongPasswordException;
 import zadacha.repositories.UserRepository;
 import zadacha.services.api.UserService;
 
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServletRequest;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 
@@ -24,7 +27,8 @@ public class UserServiceImpl implements UserService {
     private PasswordEncoder passwordEncoder;
 
     @Transactional
-    public boolean createUser(User newUser) throws UserAlreadyExistsException {
+    public boolean createUser(User newUser)
+            throws UserAlreadyExistsException {
 
         if(userRepository.existsUserByName(newUser.getName().toUpperCase())) {
             throw new UserAlreadyExistsException();
@@ -32,8 +36,26 @@ public class UserServiceImpl implements UserService {
 
         newUser.setPassword(passwordEncoder.encode(newUser.getPassword()));
         newUser.setName(newUser.getName().toUpperCase());
+        newUser.setAccountNonLocked(true);
+        newUser.setFailedAttempt(0);
+        newUser.setLockTime(LocalDateTime.now().minusYears(LOCK_TIME_RESET));
+
         userRepository.save(newUser);
         return true;
+    }
+
+    @Transactional
+    public void authWithHttpServletRequest(HttpServletRequest request,
+                                            String username,
+                                            String password)
+            throws RequestException {
+
+            try {
+                request.login(username, password);
+            } catch (ServletException e) {
+                throw new RequestException();
+            }
+
     }
 
     @Transactional

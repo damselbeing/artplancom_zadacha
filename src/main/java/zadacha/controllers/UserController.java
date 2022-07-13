@@ -8,6 +8,9 @@ import zadacha.exceptions.UserNotFoundException;
 import zadacha.exceptions.WrongPasswordException;
 import zadacha.services.api.UserService;
 
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServletRequest;
+
 @RestController
 public class UserController {
 
@@ -15,10 +18,20 @@ public class UserController {
     private UserService userService;
 
     @PostMapping("/registration")
-    public boolean registerNewUser(@RequestBody User newUser)
-            throws UserAlreadyExistsException {
+    public boolean registerNewUser(@RequestBody User newUser,
+                                   HttpServletRequest request)
+            throws UserAlreadyExistsException, ServletException {
 
-        return userService.createUser(newUser);
+        String username = newUser.getName();
+        String password = newUser.getPassword();
+
+        if(userService.createUser(newUser)) {
+            userService.authWithHttpServletRequest(request, username, password);
+            return true;
+        }
+
+        return false;
+
     }
 
     @PutMapping("/login")

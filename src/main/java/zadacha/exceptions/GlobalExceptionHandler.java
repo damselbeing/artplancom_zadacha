@@ -14,7 +14,8 @@ public class GlobalExceptionHandler {
             AnimalAlreadyExistsException.class,
             UserAlreadyExistsException.class,
             UserNotFoundException.class,
-            WrongPasswordException.class})
+            WrongPasswordException.class,
+            RequestException.class})
     public ErrorMessage appExceptionHandler(Exception ex) {
         ErrorMessage message = new ErrorMessage(
                 HttpStatus.BAD_REQUEST.value(),
