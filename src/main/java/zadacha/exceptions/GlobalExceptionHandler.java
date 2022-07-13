@@ -23,15 +23,4 @@ public class GlobalExceptionHandler {
         return message;
     }
 
-//    @ResponseStatus(value = HttpStatus.UNAUTHORIZED)
-//    @ExceptionHandler({UserLockedException.class,
-//            BadCredentialsException.class})
-//    public ErrorMessage authExceptionHandler(Exception ex) {
-//        ErrorMessage message = new ErrorMessage(
-//                HttpStatus.UNAUTHORIZED.value(),
-//                ex.getMessage());
-//
-//        return message;
-//    }
-
 }
