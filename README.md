@@ -15,3 +15,19 @@
 
 Все ошибки должны имеют номера и текстовую расшифровки.
 Ошибки в случае возникновения так же передаются в виде JSON объекта.
+
+**RUN**
+
+`mvn spring-boot:run`
+
+**WEB**
+
+`http://localhost:8080/`
+
+**TOOLS**
+
+Java 11, SpringBoot 2, Spring Security, Spring Data, Maven, PostgreSQL
+
+**LICENSE**
+
+Licensed under the MIT license.

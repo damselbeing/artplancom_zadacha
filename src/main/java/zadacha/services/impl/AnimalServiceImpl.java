@@ -75,6 +75,7 @@ public class AnimalServiceImpl implements AnimalService {
         animalFromDB.setBirthDate(editedAnimal.getBirthDate());
         animalFromDB.setSex(editedAnimal.getSex());
         animalFromDB.setPetName(editedAnimal.getPetName());
+        animalFromDB.setUser(editedAnimal.getUser());
 
         animalRepository.save(editedAnimal);
         return true;
